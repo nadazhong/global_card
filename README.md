@@ -1,4 +1,7 @@
 global_card
 ===========
 
-play card game together
+梦想做一款炉石一样的卡牌游戏 
+
+day 1 
+完成文件框架搭建 测试开各个server是否正常
