@@ -5,5 +5,5 @@ import (
 )
 
 func SayHi() {
-	fmt.Println("Say Hi")
+	fmt.Println("Hi,Welcome global card server!")
 }
