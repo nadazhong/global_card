@@ -26,3 +26,5 @@ _testmain.go
 pkg/
 log/
 bin/
+client/
+protocol/

@@ -10,8 +10,9 @@ SRCDIR = ./src
 all: $(PROGS)
 
 $(PROGS):
-	GOPATH=$(GOPATH) $(GO) install centerserver
-	GOPATH=$(GOPATH) $(GO) install gameserver
+	GOPATH=$(GOPATH) $(GO) install centerserver_main
+	GOPATH=$(GOPATH) $(GO) install gameserver_main
+	GOPATH=$(GOPATH) $(GO) install gateserver_main
 	
 
 clean:

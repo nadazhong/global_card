@@ -1,4 +1,4 @@
-package gameserver
+package gateserver
 
 import (
 	"cfg"
@@ -11,7 +11,7 @@ func init() {
 }
 
 func welcome() {
-	fmt.Println("Start gameserver ...")
+	fmt.Println("Start gateserver ...")
 	misc.SayHi()
 	//cfg.AllIni()
 	config := cfg.Get()
@@ -45,10 +45,4 @@ func Start() {
 
 	//gsDbInit()
 	//startWorker()
-}
-
-func gsDbInit() {
-	//
-	fmt.Println("载入gs数据")
-
 }
