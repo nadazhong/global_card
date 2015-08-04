@@ -49,14 +49,14 @@ func (serverInfo *ConnInfo) SyncSend(data []byte) (err error) {
 
 func (serverInfo *ConnInfo) start() {
 	defer func() {
-		fmt.Printf("Connection to server %p quit.", serverInfo)
+		fmt.Printf("Connection to server %s quit.\n", serverInfo)
 		serverInfo.conn.Close()
 		serverInfo.sender.Close()
 		serverInfo.CloseChan <- 1
 	}()
 
 	conn := serverInfo.conn
-	fmt.Printf("Connection %p start.", serverInfo)
+	fmt.Printf("Connection %p start.\n", serverInfo)
 
 	go serverInfo.sender.start(nil)
 

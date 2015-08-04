@@ -2,8 +2,8 @@ package centerserver
 
 import (
 	//"cfg"
-	//"gstimer"
 	"fmt"
+	"gstimer"
 	//"misc/packet"
 	"os"
 	"os/signal"
@@ -37,8 +37,7 @@ func SignalProc() {
 }
 
 func setQuitTimer() {
-	return
-	//gstimer.CreateTimer(0, 0, gstimer.Msg{Action: gstimer.ACTION_SHUTDOWN})
+	gstimer.CreateTimer(0, 0, gstimer.Msg{Action: gstimer.ACTION_SHUTDOWN})
 }
 
 func onExit(msg os.Signal) {

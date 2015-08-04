@@ -3,9 +3,19 @@ package centerserver
 import (
 	"cfg"
 	"fmt"
+	"gstimer"
 	"misc"
+	"protocol"
 	"servernet"
 )
+
+var (
+	centerQuit bool // 停服标记。
+)
+
+func init() {
+	centerQuit = false
+}
 
 func init() {
 	welcome()
@@ -55,36 +65,60 @@ func CenterLoop(centerServer *servernet.ClientInfo) {
 
 	for {
 		select {
-		//case id, err := <-gstimer.GS_TIMER:
-		//	if !err {
-		//		cfg.LogErrf("Timer %v error %v.", id, err)
-		//		return
-		//	}
-		//	centerTimerHandler(id, err)
+		case id, err := <-gstimer.GS_TIMER:
+			if !err {
+				fmt.Printf("Timer %v error %v.", id, err)
+				return
+			}
+			centerTimerHandler(id, err)
 		case session, err := <-centerServer.ConnectChan:
 			if !err {
 				fmt.Printf("Extra net new chan error:", err)
 				return
 			}
+			fmt.Println("新的GS连接进来 ", session)
 			fmt.Printf("Extra server new session:", session.Id)
 			//newGs(session)
 		case session, _ := <-centerServer.CloseChan:
 			fmt.Printf("Extra server close sesion:", session.Id)
 			//closeGs(session)
-		case _, ok := <-centerServer.MsgQueue:
+		case msg, ok := <-centerServer.MsgQueue:
 			if !ok {
-				fmt.Printf("Extra net queue error.")
+				fmt.Println("Extra net queue error.")
 			}
-			//if msg.Api == protocol.MAIL_CONNECTED_NTF
-			//|| msg.Api == protocol.GS_CONNECTED_NTF {
-			//	//conectHandler(msg)
-			//	continue
-			//}
-			//if getMailSession() != nil && getMailSession().session.Id == msg.Session.Id {
-			//	mailHandler(msg)
-			//	continue
-			//}
-			//msgHander(msg)
+			fmt.Println("center msg queue recv:", msg.Api)
+			// 如果消息是GS->Center的连接消息
+			if msg.Api == protocol.GS_CONNECTED_NTF {
+				conectHandler(msg)
+				continue
+			}
+			// 处理其他消息
+			msgHander(msg)
 		}
 	}
+}
+
+func doSave() {
+	fmt.Println("center 保存数据")
+}
+
+func shutDown() {
+	fmt.Println("收到关服消息.")
+	doSave()
+	// 关闭db连接
+	//gsdb.CloseCenterDB()
+}
+
+func centerTimerHandler(id int64, ok bool) {
+	if !ok {
+		fmt.Println("GSTimer error: %v", ok)
+	}
+	timer := gstimer.TIMER_MAP[id]
+	switch timer.Msg.Action {
+	case gstimer.ACTION_SHUTDOWN:
+		shutDown()
+		STOP_SIG <- 1
+		return
+	}
+	gstimer.FreeTimer(id)
 }

@@ -4,11 +4,16 @@ import (
 	"cfg"
 	"fmt"
 	"misc"
+	"strconv"
 )
 
 func init() {
 	welcome()
 }
+
+var (
+	GS_ID int16
+)
 
 func welcome() {
 	fmt.Println("Start gameserver ...")
@@ -20,35 +25,36 @@ func welcome() {
 	fmt.Printf("Start Date : %v \n", config["date"])
 	fmt.Printf("Mail : %v \n", config["mail"])
 }
+
 func Start() {
+	config := cfg.Get()
 
-	//config := cfg.Get()
+	if config["server_id"] == "" {
+		fmt.Println("Server id not find.")
+	}
+	gsid, _ := strconv.Atoi(config["server_id"])
+	GS_ID = int16(gsid)
+	fmt.Println("配置的GS_ID ", GS_ID)
 
-	//if config["cs_port"] == "" || config["cs_ip"] == "" {
-	//	fmt.Println("CS config port/ip nil.")
-	//}
-	//addr := config["cs_ip"] + ":" + config["cs_port"]
+	if config["gate_intra_port"] == "" || config["gate_intra_ip"] == "" {
+		fmt.Println("Gate addr config nil.")
+	}
 
-	//if value := config["server_id"], value == ""{
-	//	fmt.Println("Server id not find.")
-	//}
-	//gsid, _ := strconv.Atoi(value)
-	//GS_ID = int16(gsid)
+	fmt.Println("Starting the gameserver.")
 
-	//if config["intra_port"] == "" || config["intra_ip"] == "" {
-	//	fmt.Println("center addr config nil.")
-	//}
+	go SignalProc()
 
-	//cfg.Log("Starting the game server.")
-
-	//go SignalProc()
-
-	//gsDbInit()
-	//startWorker()
+	gsDbInit()
+	startWorker()
 }
 
 func gsDbInit() {
 	//
 	fmt.Println("载入gs数据")
 
+}
+
+// GS 逻辑启动
+func gsRun() {
+	fmt.Println("Game Server starting.")
 }

@@ -2,10 +2,10 @@ package servernet
 
 import (
 	"fmt"
+	"misc/packet"
 	"net"
 	"protocol"
 	"strings"
-	"misc/packet"
 )
 
 var (
@@ -67,7 +67,7 @@ func NewServer(addr string, rawMsg bool) (error, *ClientInfo) {
 				continue
 			}
 			news := newSession(conn, &serverInfo, rawMsg)
-			fmt.Printf("New session:", news.ip)
+			fmt.Println("New session: ", news.ip)
 			serverInfo.ConnectChan <- news
 		}
 	}()
